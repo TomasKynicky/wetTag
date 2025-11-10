@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6f7va1v3irup"]
+
+[ext_resource type="Script" uid="uid://c003i8seevg4p" path="res://player/player.gd" id="1_ulp21"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_oul6g"]
+
+[node name="Player" type="CharacterBody3D"]
+transform = Transform3D(0.99892, 0, -0.046461537, 0, 1, 0, 0.046461537, 0, 0.99892, 0, 0, 0)
+script = ExtResource("1_ulp21")
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+transform = Transform3D(0.5333792, 0, -3.7252903e-09, 0, 0.60013545, 0, 0, 0, 0.6771936, 0, 3.135471, 0)
+use_collision = true
+mesh = SubResource("CapsuleMesh_oul6g")
+
+[node name="Skeleton3D" type="Skeleton3D" parent="."]
+transform = Transform3D(0.5333792, 0, 0, 0, 0.60013545, 0, 0, 0, 0.6771935, 0, 3.135471, 0)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.6646046, 0.5785067, -0.47289592, 0, 0.6328948, 0.7742378, 0.7471952, 0.514562, -0.4206248, -1.231181, 5.211845, -1.7123455)
+fov = 99.8
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 100
+text = "Test"

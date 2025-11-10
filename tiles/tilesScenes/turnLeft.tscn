@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dqd0o6x6lbpoc"]
+
+[ext_resource type="ArrayMesh" uid="uid://8pw7u2qef4in" path="res://tiles/tilesModels/placeholdersTurnLeft.obj" id="1_pvp6d"]
+
+[node name="turnLeft" type="Node3D"]
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+mesh = ExtResource("1_pvp6d")

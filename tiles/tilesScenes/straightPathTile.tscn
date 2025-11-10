@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://crxsv3701lr2x"]
+
+[ext_resource type="ArrayMesh" uid="uid://bjpsqd7i45wkk" path="res://tiles/tilesModels/placeholdersStraightWay.obj" id="1_1c16v"]
+
+[node name="straightPathTile" type="Node3D"]
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+use_collision = true
+mesh = ExtResource("1_1c16v")
