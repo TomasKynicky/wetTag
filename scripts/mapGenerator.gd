@@ -1,9 +1,9 @@
 extends Node
 
 var items := [
-	["1", 10],
-	["2", 20],
-	["3", 30],
+	["res://tiles/tilesScenes/turnLeft.tscn", 10],
+	["res://tiles/tilesScenes/straightPathTile.tscn", 20],
+	["res://tiles/tilesScenes/turnRight.tscn", 30],
 ]
 
 var chosedTiles: Array = []
