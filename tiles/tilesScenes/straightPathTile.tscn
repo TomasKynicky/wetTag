@@ -1,7 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://crxsv3701lr2x"]
+[gd_scene load_steps=5 format=3 uid="uid://crxsv3701lr2x"]
 
 [ext_resource type="ArrayMesh" uid="uid://bjpsqd7i45wkk" path="res://tiles/tilesModels/placeholdersStraightWay.obj" id="1_1c16v"]
 [ext_resource type="Script" uid="uid://hnkilkrg6ha" path="res://tiles/tileLenghtSetter.gd" id="1_5bbb8"]
+[ext_resource type="Script" uid="uid://vxjbd044c14" path="res://tiles/triggerArea.gd" id="3_wtbdh"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5bbb8"]
+size = Vector3(84.93295, 170.42615, 642.92755)
 
 [node name="straightPathTile" type="Node3D"]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
@@ -17,3 +21,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 375.8625)
 
 [node name="Exit" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -267.3891)
+
+[node name="TriggerArea" type="Area3D" parent="."]
+script = ExtResource("3_wtbdh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TriggerArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.775852, 85.18265, 54.281765)
+shape = SubResource("BoxShape3D_5bbb8")

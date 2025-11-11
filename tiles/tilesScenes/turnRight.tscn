@@ -1,15 +1,26 @@
-[gd_scene load_steps=3 format=3 uid="uid://chc7eu2170wvv"]
+[gd_scene load_steps=5 format=3 uid="uid://chc7eu2170wvv"]
 
 [ext_resource type="Script" uid="uid://hnkilkrg6ha" path="res://tiles/tileLenghtSetter.gd" id="1_ifcuv"]
 [ext_resource type="ArrayMesh" uid="uid://byxnmislcpnrd" path="res://tiles/tilesModels/placeholdersTurnRight.obj" id="1_oam1q"]
+[ext_resource type="Script" uid="uid://vxjbd044c14" path="res://tiles/triggerArea.gd" id="2_1h4vh"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ifcuv"]
+size = Vector3(160.63318, 245.07986, 754.0306)
 
 [node name="turnRight" type="Node3D"]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 script = ExtResource("1_ifcuv")
 
+[node name="TriggerArea" type="Area3D" parent="."]
+script = ExtResource("2_1h4vh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TriggerArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42.19037, 122.03995, -0.3865242)
+shape = SubResource("BoxShape3D_ifcuv")
+
 [node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+use_collision = true
 mesh = ExtResource("1_oam1q")
-metadata/_edit_group_ = true
 
 [node name="Entry" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 375.8625)

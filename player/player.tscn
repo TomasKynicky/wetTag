@@ -2,25 +2,21 @@
 
 [ext_resource type="Script" uid="uid://c003i8seevg4p" path="res://player/player.gd" id="1_ulp21"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ulp21"]
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_oul6g"]
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_3c3w1"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rkbax"]
 
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(0.99892, 0, -0.046461537, 0, 1, 0, 0.046461537, 0, 0.99892, 0, 0, 0)
 script = ExtResource("1_ulp21")
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0544891, 0)
+mesh = SubResource("CapsuleMesh_oul6g")
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("CapsuleShape3D_ulp21")
-
-[node name="CSGMesh3D" type="CSGMesh3D" parent="."]
-transform = Transform3D(1.179298, 0, -1.4901161e-08, 0, 0.9447061, 0, 1.1175871e-08, 0, 1.0332037, 0, -0.029169798, 0)
-use_collision = true
-mesh = SubResource("CapsuleMesh_3c3w1")
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.6646046, 0.5785067, -0.47289592, 0, 0.6328948, 0.7742378, 0.7471952, 0.514562, -0.4206248, -1.231181, 5.211845, -1.7123455)
-fov = 99.8
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0544891, 0)
+shape = SubResource("CapsuleShape3D_rkbax")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -29,3 +25,6 @@ offset_right = 40.0
 offset_bottom = 23.0
 theme_override_font_sizes/font_size = 100
 text = "Test"
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.9998929, -0.014459933, -0.002304975, 0.014459942, 0.95033664, 0.31088778, -0.0023049153, -0.31088778, 0.950444, 0.1200012, 2.8155236, 2.580019)
