@@ -1,8 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://dqd0o6x6lbpoc"]
+[gd_scene load_steps=3 format=3 uid="uid://dqd0o6x6lbpoc"]
 
+[ext_resource type="Script" uid="uid://hnkilkrg6ha" path="res://tiles/tileLenghtSetter.gd" id="1_5rc3x"]
 [ext_resource type="ArrayMesh" uid="uid://8pw7u2qef4in" path="res://tiles/tilesModels/placeholdersTurnLeft.obj" id="1_pvp6d"]
 
 [node name="turnLeft" type="Node3D"]
+script = ExtResource("1_5rc3x")
 
 [node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 2.8478928, 0)
 mesh = ExtResource("1_pvp6d")
+
+[node name="Entry" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 37.59275)
+
+[node name="Exit" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -37.5126)

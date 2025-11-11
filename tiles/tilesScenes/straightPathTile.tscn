@@ -1,9 +1,19 @@
-[gd_scene load_steps=2 format=3 uid="uid://crxsv3701lr2x"]
+[gd_scene load_steps=3 format=3 uid="uid://crxsv3701lr2x"]
 
 [ext_resource type="ArrayMesh" uid="uid://bjpsqd7i45wkk" path="res://tiles/tilesModels/placeholdersStraightWay.obj" id="1_1c16v"]
+[ext_resource type="Script" uid="uid://hnkilkrg6ha" path="res://tiles/tileLenghtSetter.gd" id="1_5bbb8"]
 
 [node name="straightPathTile" type="Node3D"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+script = ExtResource("1_5bbb8")
 
 [node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9369717, 0)
 use_collision = true
 mesh = ExtResource("1_1c16v")
+
+[node name="Entry" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 375.8625)
+
+[node name="Exit" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -267.3891)

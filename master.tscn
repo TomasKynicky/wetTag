@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://cd1t7v8bveg51"]
+
+[ext_resource type="Script" uid="uid://jscuy4dkq05f" path="res://scripts/mapGenerator.gd" id="1_te040"]
+[ext_resource type="Script" uid="uid://er7cy3o66as7" path="res://camera.gd" id="2_s35ub"]
+
+[node name="Master" type="Node3D"]
+script = ExtResource("1_te040")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+script = ExtResource("2_s35ub")

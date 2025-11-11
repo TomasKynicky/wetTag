@@ -1,8 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://chc7eu2170wvv"]
+[gd_scene load_steps=3 format=3 uid="uid://chc7eu2170wvv"]
 
+[ext_resource type="Script" uid="uid://hnkilkrg6ha" path="res://tiles/tileLenghtSetter.gd" id="1_ifcuv"]
 [ext_resource type="ArrayMesh" uid="uid://byxnmislcpnrd" path="res://tiles/tilesModels/placeholdersTurnRight.obj" id="1_oam1q"]
 
 [node name="turnRight" type="Node3D"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+script = ExtResource("1_ifcuv")
 
 [node name="CSGMesh3D" type="CSGMesh3D" parent="."]
 mesh = ExtResource("1_oam1q")
+metadata/_edit_group_ = true
+
+[node name="Entry" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 375.8625)
+
+[node name="Exit" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -376.59702)
