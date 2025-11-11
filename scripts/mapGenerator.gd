@@ -14,6 +14,7 @@ var has_last_exit: bool = false
 var playersActiveTiles: Array[int] = []
 var tile_player_counts: Dictionary = {}
 var tiles_by_index: Dictionary = {}
+var player_max_reached: Dictionary = {}
 
 func _ready() -> void:
 	randomize()
@@ -31,20 +32,30 @@ func _ready() -> void:
 			if not area.playerLeaveArea.is_connected(_on_player_leave_area):
 				area.playerLeaveArea.connect(_on_player_leave_area)
 
-func _on_player_enter_area(tile_index: int) -> void:
+func _on_player_enter_area(tile_index: int, body: Node3D) -> void:
 	var prev_count: int = 0
 	if tile_player_counts.has(tile_index):
 		prev_count = tile_player_counts[tile_index]
 	var new_count: int = prev_count + 1
 	tile_player_counts[tile_index] = new_count
 
-	if prev_count == 0:
-		if tile_index not in playersActiveTiles:
-			playersActiveTiles.append(tile_index)
+	if prev_count == 0 and tile_index not in playersActiveTiles:
+		playersActiveTiles.append(tile_index)
+
+	var body_id: int = body.get_instance_id()
+	var old_max: int
+	if player_max_reached.has(body_id):
+		old_max = player_max_reached[body_id]
+	else:
+		old_max = tile_index
+	if tile_index > old_max:
+		player_max_reached[body_id] = tile_index
+	elif not player_max_reached.has(body_id):
+		player_max_reached[body_id] = old_max
 
 	print("Aktivní tiles:", playersActiveTiles)
 
-func _on_player_leave_area(tile_index: int) -> void:
+func _on_player_leave_area(tile_index: int, body: Node3D) -> void:
 	if not tile_player_counts.has(tile_index):
 		return
 
@@ -55,7 +66,16 @@ func _on_player_leave_area(tile_index: int) -> void:
 		tile_player_counts.erase(tile_index)
 		playersActiveTiles.erase(tile_index)
 
-		if tiles_by_index.has(tile_index):
+		var can_delete: bool = false
+		if not player_max_reached.is_empty():
+			can_delete = true
+			for value in player_max_reached.values():
+				var max_idx: int = value
+				if max_idx <= tile_index:
+					can_delete = false
+					break
+
+		if can_delete and tiles_by_index.has(tile_index):
 			var tile: Node3D = tiles_by_index[tile_index]
 			tiles_by_index.erase(tile_index)
 			if is_instance_valid(tile):

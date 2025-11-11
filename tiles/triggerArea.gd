@@ -1,7 +1,7 @@
 extends Area3D
 
-signal playerEnterArea(index: int)
-signal playerLeaveArea(index: int)
+signal playerEnterArea(index: int, body: Node3D)
+signal playerLeaveArea(index: int, body: Node3D)
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
@@ -14,7 +14,7 @@ func _on_body_entered(body: Node3D) -> void:
 	var tile := get_parent() as Node3D
 	if tile.has_meta("tile_index"):
 		var idx: int = tile.get_meta("tile_index")
-		playerEnterArea.emit(idx)
+		playerEnterArea.emit(idx, body)
 
 func _on_body_exited(body: Node3D) -> void:
 	if not body.is_in_group("player"):
@@ -23,4 +23,4 @@ func _on_body_exited(body: Node3D) -> void:
 	var tile := get_parent() as Node3D
 	if tile.has_meta("tile_index"):
 		var idx: int = tile.get_meta("tile_index")
-		playerLeaveArea.emit(idx)
+		playerLeaveArea.emit(idx, body)

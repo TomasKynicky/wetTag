@@ -1,0 +1,52 @@
+[gd_scene load_steps=9 format=3 uid="uid://ck3uoahyq6frp"]
+
+[ext_resource type="Script" uid="uid://c755j1o5v3osv" path="res://turret.gd" id="1_3oylf"]
+[ext_resource type="PackedScene" uid="uid://cewx6jj0ndhph" path="res://bullet.tscn" id="2_tjdg3"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_8xk5y"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_tjdg3"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_3oylf"]
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_3oylf"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_tjdg3"]
+material = SubResource("ORMMaterial3D_3oylf")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_coqkk"]
+size = Vector3(7.665039, 5.680542, 6.6123047)
+
+[node name="Turret" type="Node3D"]
+script = ExtResource("1_3oylf")
+bullet_scene = ExtResource("2_tjdg3")
+invert_pitch = true
+
+[node name="Skeleton3D" type="Skeleton3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Skeleton3D"]
+transform = Transform3D(0.55028784, 0, 0, 0, 0.5213018, 0, 0, 0, 0.56383944, 0, 3.8940034, 0)
+mesh = SubResource("CapsuleMesh_8xk5y")
+skeleton = NodePath("../..")
+
+[node name="TurretHead" type="MeshInstance3D" parent="Skeleton3D"]
+transform = Transform3D(0.5112304, 0, 0.12300936, -0.044331606, 0.46518126, 0.19987273, -0.10946594, -0.18838945, 0.49353638, 0, 3.2959664, 0)
+mesh = SubResource("SphereMesh_tjdg3")
+
+[node name="TurretCanon" type="MeshInstance3D" parent="Skeleton3D/TurretHead"]
+transform = Transform3D(0.5251046, -0.04200619, -0.12551922, 7.3199495e-09, 0.48176447, -0.23610228, 0.116467744, 0.1745789, 0.52166146, 0.024030328, -0.27560234, -0.09987092)
+mesh = SubResource("CylinderMesh_3oylf")
+skeleton = NodePath("../..")
+
+[node name="Muzzle" type="Marker3D" parent="Skeleton3D/TurretHead/TurretCanon"]
+transform = Transform3D(0.9999999, 3.5522176e-23, -6.617445e-23, 0, 1, 1.7763568e-15, 0, 9.947598e-14, 0.9999999, -0.011986759, -1.1817894, 0.014662174)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Skeleton3D/TurretHead/TurretCanon"]
+transform = Transform3D(0.4785803, 3.5527137e-15, -2.3161057e-23, 0, 4.9886746, 0, 0, 1.1368684e-13, 0.29137906, -3.525599e-08, -5.35236, 0.29307854)
+mesh = SubResource("CylinderMesh_tjdg3")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.340271, 0)
+shape = SubResource("BoxShape3D_coqkk")

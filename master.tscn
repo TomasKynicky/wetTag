@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cd1t7v8bveg51"]
+[gd_scene load_steps=4 format=3 uid="uid://cd1t7v8bveg51"]
 
 [ext_resource type="Script" uid="uid://jscuy4dkq05f" path="res://scripts/mapGenerator.gd" id="1_te040"]
 [ext_resource type="PackedScene" uid="uid://bgubxun78jkik" path="res://player/player.tscn" id="2_s35ub"]
+[ext_resource type="PackedScene" uid="uid://ck3uoahyq6frp" path="res://turret.tscn" id="3_h2bm4"]
 
 [node name="Master" type="Node3D"]
 script = ExtResource("1_te040")
@@ -11,3 +12,6 @@ transform = Transform3D(0.99892, 0, -0.046461537, 0, 1, 0, 0.046461537, 0, 0.998
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.828718, 16.45825, 0)
+
+[node name="Turret" parent="." instance=ExtResource("3_h2bm4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03345871, 3.550127, -25.048115)
