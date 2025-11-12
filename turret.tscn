@@ -1,6 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://ck3uoahyq6frp"]
+[gd_scene load_steps=7 format=3 uid="uid://d1aeto8cld11w"]
 
-[ext_resource type="Script" uid="uid://c755j1o5v3osv" path="res://turret.gd" id="1_3oylf"]
+[ext_resource type="Script" uid="uid://gyp8bms6edl7" path="res://turret.gd" id="1_3oylf"]
 [ext_resource type="PackedScene" uid="uid://cewx6jj0ndhph" path="res://bullet.tscn" id="2_tjdg3"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_8xk5y"]
@@ -9,18 +9,13 @@
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_3oylf"]
 
-[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_3oylf"]
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_tjdg3"]
-material = SubResource("ORMMaterial3D_3oylf")
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_coqkk"]
-size = Vector3(7.665039, 5.680542, 6.6123047)
+size = Vector3(12.419922, 5.680542, 10.996094)
 
 [node name="Turret" type="Node3D"]
 script = ExtResource("1_3oylf")
-bullet_scene = ExtResource("2_tjdg3")
 invert_pitch = true
+bullet_scene = ExtResource("2_tjdg3")
 
 [node name="Skeleton3D" type="Skeleton3D" parent="."]
 
@@ -39,11 +34,10 @@ mesh = SubResource("CylinderMesh_3oylf")
 skeleton = NodePath("../..")
 
 [node name="Muzzle" type="Marker3D" parent="Skeleton3D/TurretHead/TurretCanon"]
-transform = Transform3D(0.9999999, 3.5522176e-23, -6.617445e-23, 0, 1, 1.7763568e-15, 0, 9.947598e-14, 0.9999999, -0.011986759, -1.1817894, 0.014662174)
+transform = Transform3D(0.9999999, 3.552217e-23, -9.264423e-23, 0, 1, 1.7763568e-15, 0, 1.2789769e-13, 0.9999999, -0.011986766, -2.522461, 0.01466192)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Skeleton3D/TurretHead/TurretCanon"]
-transform = Transform3D(0.4785803, 3.5527137e-15, -2.3161057e-23, 0, 4.9886746, 0, 0, 1.1368684e-13, 0.29137906, -3.525599e-08, -5.35236, 0.29307854)
-mesh = SubResource("CylinderMesh_tjdg3")
+[node name="FireTimer" type="Timer" parent="."]
+wait_time = 0.7
 
 [node name="Area3D" type="Area3D" parent="."]
 
