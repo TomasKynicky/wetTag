@@ -1,31 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://cewx6jj0ndhph"]
+[gd_scene load_steps=3 format=3 uid="uid://cewx6jj0ndhph"]
 
-[ext_resource type="Script" uid="uid://be8tgw7wch241" path="res://bullet.gd" id="1_v7oki"]
+[ext_resource type="Script" uid="uid://cyvh7eqhncwxn" path="res://bullet.gd" id="1_v7oki"]
+[ext_resource type="ArrayMesh" uid="uid://ciyqse1eid2vs" path="res://models/hamer.obj" id="2_v8qja"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_rtl8c"]
-
-[sub_resource type="SphereMesh" id="SphereMesh_v7oki"]
-
-[node name="Bullet" type="Node3D"]
-transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
-
-[node name="RigidBody3D" type="RigidBody3D" parent="."]
+[node name="RigidBody3D" type="RigidBody3D"]
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
+mass = 0.2
 script = ExtResource("1_v7oki")
-speed = 100.0
-lifetime = 10.0
-stun_duration = null
-projectile_group = null
-grace_time = null
-enable_mask_after_grace = null
-use_gravity = null
-collision_layer_bits = null
-linear_damp_override = null
-angular_damp_override = null
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
-transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0)
-shape = SubResource("SphereShape3D_rtl8c")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_v7oki")
+[node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+mesh = ExtResource("2_v8qja")

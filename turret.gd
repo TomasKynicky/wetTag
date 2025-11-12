@@ -1,137 +1,94 @@
-# turret.gd
 extends Node3D
 
 @onready var area: Area3D = $Area3D
 @onready var turret_head: Node3D = $Skeleton3D/TurretHead
 @onready var turret_cannon: Node3D = $Skeleton3D/TurretHead/TurretCanon
 @onready var muzzle: Marker3D = $Skeleton3D/TurretHead/TurretCanon/Muzzle
-@onready var fire_timer: Timer = $FireTimer
+@onready var fireTimer: Timer = $FireTimer
 
 @export var target_group: String = "player"
-@export var projectile_group: String = "projectile"
 @export var pitch_limits_deg: Vector2 = Vector2(-45.0, 45.0)
 @export_range(-180.0, 180.0, 1.0) var yaw_offset_deg: float = 0.0
 @export var invert_pitch: bool = false
-@export var bullet_scene: PackedScene
-@export var fire_rate_hz: float = 3.0
-@export var bullet_speed: float = 180.0
-@export var bullet_lifetime_s: float = 8.0
-@export var stun_duration_s: float = 1.5
-@export var max_fire_distance: float = 500.0
-@export var spawn_offset: float = 2.0
+@export var bulletScene: PackedScene
+@export var bullet_speed: float = 60.0
+@export var fire_cooldown_sec: float = 1.5
 
+var canShootTimer: bool = true
 var _target: Node3D = null
 
-func _update_fire_timer() -> void:
-	var hz: float = max(fire_rate_hz, 0.1)
-	fire_timer.wait_time = 1.0 / hz
-	fire_timer.one_shot = false
-	fire_timer.autostart = false
-
 func _ready() -> void:
-	area.monitoring = true
-	area.monitorable = true
 	area.body_entered.connect(_on_area_body_entered)
 	area.body_exited.connect(_on_area_body_exited)
-	_update_fire_timer()
-	if not fire_timer.timeout.is_connected(shoot):
-		fire_timer.timeout.connect(shoot)
-	fire_timer.stop()
+
+	fireTimer.one_shot = true
+	fireTimer.wait_time = fire_cooldown_sec
+	fireTimer.timeout.connect(_on_timer_timeout)
 
 func _physics_process(_delta: float) -> void:
-	if not _is_valid_target(_target):
-		for b in area.get_overlapping_bodies():
-			if b is Node3D and not b.is_in_group(projectile_group) and (target_group == "" or (b as Node3D).is_in_group(target_group)):
-				_target = b as Node3D
-				break
-	if _is_valid_target(_target):
-		aim(_target.global_transform.origin)
-		if fire_timer.is_stopped():
-			fire_timer.start()
-	else:
-		if not fire_timer.is_stopped():
-			fire_timer.stop()
+	for b in area.get_overlapping_bodies():
+		if b.is_in_group(target_group):
+			_target = b
+			var aimed := aim(_target.global_transform.origin)
+			if aimed and canShootTimer:
+				shoot()
+				canShootTimer = false
+				fireTimer.start()
+			break
 
 func _on_area_body_entered(body: Node) -> void:
-	if body.is_in_group(projectile_group):
-		return
-	if body is Node3D and (target_group == "" or body.is_in_group(target_group)):
-		_target = body as Node3D
-		if fire_timer.is_stopped():
-			fire_timer.start()
+	if body.is_in_group(target_group):
+		_target = body
 
 func _on_area_body_exited(body: Node) -> void:
-	if body.is_in_group(projectile_group):
-		return
 	if body == _target:
 		_target = null
-		if not fire_timer.is_stopped():
-			fire_timer.stop()
 
-func _is_valid_target(n: Node3D) -> bool:
-	return n != null and is_instance_valid(n) and n.is_inside_tree()
-
-func aim(target_pos: Vector3) -> void:
+func aim(target_pos: Vector3) -> bool:
 	var head_pos: Vector3 = turret_head.global_transform.origin
 	var to: Vector3 = target_pos - head_pos
-	var yaw: float = atan2(to.x, to.z) + deg_to_rad(yaw_offset_deg)
-	turret_head.rotation = Vector3(0.0, yaw, 0.0)
+
+	var desired_yaw: float = atan2(to.x, to.z) + deg_to_rad(yaw_offset_deg)
+	turret_head.rotation.y = lerp_angle(turret_head.rotation.y, desired_yaw, 0.15)
+
 	var dir_local: Vector3 = turret_head.to_local(target_pos)
-	var pitch: float = -atan2(dir_local.y, dir_local.z)
+	var desired_pitch: float = -atan2(dir_local.y, dir_local.z)
 	if invert_pitch:
-		pitch = -pitch
-	pitch = clamp(pitch, deg_to_rad(pitch_limits_deg.x), deg_to_rad(pitch_limits_deg.y))
-	turret_cannon.rotation = Vector3(pitch, 0.0, 0.0)
+		desired_pitch = -desired_pitch
+	desired_pitch = clamp(
+		desired_pitch,
+		deg_to_rad(pitch_limits_deg.x),
+		deg_to_rad(pitch_limits_deg.y)
+	)
+	turret_cannon.rotation.x = lerp_angle(turret_cannon.rotation.x, desired_pitch, 0.15)
+
+	var yaw_err: float = abs(wrapf(desired_yaw - turret_head.rotation.y, -PI, PI))
+	var pitch_err: float = abs(wrapf(desired_pitch - turret_cannon.rotation.x, -PI, PI))
+	return yaw_err < 0.01 and pitch_err < 0.01
+
+
+func _get_player() -> Node3D:
+	var list := get_tree().get_nodes_in_group(target_group)
+	return list[0] as Node3D
 
 func shoot() -> void:
-	if not _is_valid_target(_target):
-		if not fire_timer.is_stopped():
-			fire_timer.stop()
-		return
-	if bullet_scene == null:
-		return
-	var dist: float = global_position.distance_to(_target.global_position)
-	if dist > max_fire_distance:
-		return
+	var player := _get_player()
+	var bullet := bulletScene.instantiate() as RigidBody3D
 
-	var bullet := bullet_scene.instantiate()
-	if bullet == null:
-		return
 	get_tree().current_scene.add_child(bullet)
+	bullet.global_transform = muzzle.global_transform
 
-	var muzzle_pos: Vector3 = muzzle.global_transform.origin
-	var dir_to_target: Vector3 = (_target.global_transform.origin - muzzle_pos).normalized()
-	if dir_to_target.length_squared() < 1e-6:
-		dir_to_target = -turret_cannon.global_transform.basis.z.normalized()
+	var dir: Vector3
+	if player and is_instance_valid(player):
+		dir = (player.global_transform.origin - muzzle.global_transform.origin).normalized()
+	else:
+		dir = -muzzle.global_transform.basis.z
 
-	var spawn_pos: Vector3 = muzzle_pos + dir_to_target * spawn_offset
-	bullet.global_transform = Transform3D(muzzle.global_transform.basis, spawn_pos)
-	bullet.add_to_group(projectile_group)
+	bullet.linear_velocity = dir * bullet_speed
 
-	if bullet.has_method("set_shooter"):
-		bullet.set_shooter(self)
-	if bullet.has_method("configure"):
-		bullet.configure(dir_to_target, bullet_speed, bullet_lifetime_s, stun_duration_s)
-
-	_muzzle_flash()
-
-func _muzzle_flash() -> void:
-	var p := GPUParticles3D.new()
-	var m := ParticleProcessMaterial.new()
-	m.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
-	m.emission_sphere_radius = 0.05
-	m.initial_velocity_min = 0.0
-	m.initial_velocity_max = 0.0
-	m.scale_curve = Curve.new()
-	m.scale_curve.add_point(0.0, 1.0)
-	m.scale_curve.add_point(1.0, 0.0)
-	p.process_material = m
-	p.amount = 12
-	p.lifetime = 0.06
-	p.one_shot = true
-	var mesh := QuadMesh.new()
-	mesh.size = Vector2(0.12, 0.12)
-	p.draw_pass_1 = mesh
-	add_child(p)
-	p.global_transform.origin = muzzle.global_transform.origin
-	p.emitting = true
+	bullet.sleeping = false
+	bullet.continuous_cd = true 
+	bullet.contact_monitor = true
+	
+func _on_timer_timeout():
+	canShootTimer = true 
