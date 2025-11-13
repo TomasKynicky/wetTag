@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://jscuy4dkq05f" path="res://scripts/mapGenerator.gd" id="1_te040"]
 [ext_resource type="PackedScene" uid="uid://bgubxun78jkik" path="res://player/player.tscn" id="2_s35ub"]
-[ext_resource type="PackedScene" uid="uid://ck3uoahyq6frp" path="res://turret.tscn" id="3_h2bm4"]
+[ext_resource type="PackedScene" uid="uid://d1aeto8cld11w" path="res://turret.tscn" id="3_h2bm4"]
 
 [node name="Master" type="Node3D"]
 script = ExtResource("1_te040")
@@ -14,4 +14,4 @@ transform = Transform3D(0.99892, 0, -0.046461537, 0, 1, 0, 0.046461537, 0, 0.998
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.828718, 16.45825, 0)
 
 [node name="Turret" parent="." instance=ExtResource("3_h2bm4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03345871, 3.550127, -25.048115)
+transform = Transform3D(0.588364, 0, -0.8085962, 0, 1, 0, 0.8085962, 0, 0.588364, -0.03345871, 3.550127, -25.048115)

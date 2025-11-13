@@ -1,18 +1,19 @@
 extends CharacterBody3D
 
-const SPEED := 30.0
+const SPEED := 10.0
 const SPRINT_MULT := 1.8
-const JUMP_VELOCITY := 4.5
-
+const JUMP_VELOCITY := 5
 const SLIDE_MIN_SPEED := 6.0
 const SLIDE_DURATION := 0.6
 const SLIDE_FRICTION := 12.0
 
+@export var double_tap_max_delay: float = 0.50
 @export var mouse_sensitivity: float = 0.003
 
 var _is_sliding: bool = false
 var _slide_time: float = 0.0
 var stamina: int = 1000
+var _last_space_time: float = -1.0
 
 @onready var camera: Camera3D = $Camera3D
 var _pitch: float = 0.0
@@ -33,6 +34,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		_pitch -= event.relative.y * mouse_sensitivity
 		_pitch = clamp(_pitch, deg_to_rad(-80.0), deg_to_rad(80.0))
 		camera.rotation.x = _pitch
+
 	if event.is_action_pressed("ui_cancel"):
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -60,19 +62,23 @@ func _physics_process(delta: float) -> void:
 		horiz = horiz.move_toward(Vector2.ZERO, SLIDE_FRICTION * delta)
 		velocity.x = horiz.x
 		velocity.z = horiz.y
+
 		if _slide_time >= SLIDE_DURATION or horiz.length() < 0.5 or not is_on_floor():
 			_is_sliding = false
 	else:
 		if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 			velocity.y = JUMP_VELOCITY
+
 		if is_on_floor():
 			var max_speed: float = SPEED * (SPRINT_MULT if want_sprint else 1.0)
+
 			if direction != Vector3.ZERO:
 				velocity.x = direction.x * max_speed
 				velocity.z = direction.z * max_speed
 			else:
 				velocity.x = move_toward(velocity.x, 0.0, SPEED)
 				velocity.z = move_toward(velocity.z, 0.0, SPEED)
+
 			if Input.is_action_just_pressed("crouch") and want_sprint:
 				var horiz_speed: float = Vector2(velocity.x, velocity.z).length()
 				if horiz_speed >= SLIDE_MIN_SPEED:
@@ -81,3 +87,26 @@ func _physics_process(delta: float) -> void:
 					velocity.y = 0.0
 
 	move_and_slide()
+
+func _input(event: InputEvent) -> void: # Double-tap detection
+	if event.is_action_pressed("ui_accept"):
+		var now := Time.get_ticks_msec() / 1000.0
+
+		if _last_space_time >= 0.0 and now - _last_space_time <= double_tap_max_delay:
+			_last_space_time = -1.0
+			_on_space_double_tap()
+		else:
+			_last_space_time = now
+
+func _on_space_double_tap() -> void:
+
+	var input_dir: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var move_dir: Vector3 = (transform.basis * Vector3(input_dir.x, 0.0, input_dir.y)).normalized()
+
+	if move_dir == Vector3.ZERO:
+		move_dir = -transform.basis.z
+
+	var dash_speed: float = SPEED * 4.0
+
+	velocity.x = move_dir.x * dash_speed
+	velocity.z = move_dir.z * dash_speed

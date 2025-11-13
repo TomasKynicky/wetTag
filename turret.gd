@@ -1,9 +1,9 @@
 extends Node3D
 
 @onready var area: Area3D = $Area3D
-@onready var turret_head: Node3D = $Skeleton3D/TurretHead
-@onready var turret_cannon: Node3D = $Skeleton3D/TurretHead/TurretCanon
-@onready var muzzle: Marker3D = $Skeleton3D/TurretHead/TurretCanon/Muzzle
+@onready var turret_body: Node3D = $Skeleton3D/TurretBody
+@onready var turret_head: Node3D = $Skeleton3D/TurretBody/TurretHead
+@onready var muzzle: Marker3D = $Skeleton3D/TurretBody/TurretHead/TurretCanon/Muzzle
 @onready var fireTimer: Timer = $FireTimer
 
 @export var target_group: String = "player"
@@ -45,36 +45,36 @@ func _on_area_body_exited(body: Node) -> void:
 		_target = null
 
 func aim(target_pos: Vector3) -> bool:
-	var head_pos: Vector3 = turret_head.global_transform.origin
-	var to: Vector3 = target_pos - head_pos
+	var body_pos: Vector3 = turret_body.global_transform.origin
+	var to: Vector3 = target_pos - body_pos
 
 	var desired_yaw: float = atan2(to.x, to.z) + deg_to_rad(yaw_offset_deg)
-	turret_head.rotation.y = lerp_angle(turret_head.rotation.y, desired_yaw, 0.15)
-
+	turret_body.rotation.y = lerp_angle(turret_body.rotation.y, desired_yaw, 0.15)
 	var dir_local: Vector3 = turret_head.to_local(target_pos)
 	var desired_pitch: float = -atan2(dir_local.y, dir_local.z)
 	if invert_pitch:
 		desired_pitch = -desired_pitch
+
 	desired_pitch = clamp(
 		desired_pitch,
 		deg_to_rad(pitch_limits_deg.x),
 		deg_to_rad(pitch_limits_deg.y)
 	)
-	turret_cannon.rotation.x = lerp_angle(turret_cannon.rotation.x, desired_pitch, 0.15)
-
-	var yaw_err: float = abs(wrapf(desired_yaw - turret_head.rotation.y, -PI, PI))
-	var pitch_err: float = abs(wrapf(desired_pitch - turret_cannon.rotation.x, -PI, PI))
-	return yaw_err < 0.01 and pitch_err < 0.01
-
+	var yaw_err: float = abs(wrapf(desired_yaw - turret_body.rotation.y, -PI, PI))
+	return yaw_err < 0.01
 
 func _get_player() -> Node3D:
 	var list := get_tree().get_nodes_in_group(target_group)
+	if list.size() == 0:
+		return null
 	return list[0] as Node3D
 
 func shoot() -> void:
 	var player := _get_player()
-	var bullet := bulletScene.instantiate() as RigidBody3D
+	if bulletScene == null:
+		return
 
+	var bullet := bulletScene.instantiate() as RigidBody3D
 	get_tree().current_scene.add_child(bullet)
 	bullet.global_transform = muzzle.global_transform
 
@@ -85,10 +85,9 @@ func shoot() -> void:
 		dir = -muzzle.global_transform.basis.z
 
 	bullet.linear_velocity = dir * bullet_speed
-
 	bullet.sleeping = false
-	bullet.continuous_cd = true 
+	bullet.continuous_cd = true
 	bullet.contact_monitor = true
-	
-func _on_timer_timeout():
-	canShootTimer = true 
+
+func _on_timer_timeout() -> void:
+	canShootTimer = true
