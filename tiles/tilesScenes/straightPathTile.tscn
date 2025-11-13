@@ -11,6 +11,15 @@ size = Vector3(84.93295, 170.42615, 642.92755)
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 script = ExtResource("1_5bbb8")
 
+[node name="TriggerArea" type="Area3D" parent="."]
+script = ExtResource("3_wtbdh")
+
+[node name="TileTimer" type="Timer" parent="TriggerArea"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TriggerArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.775852, 85.18265, 54.281765)
+shape = SubResource("BoxShape3D_5bbb8")
+
 [node name="CSGMesh3D" type="CSGMesh3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9369717, 0)
 use_collision = true
@@ -21,10 +30,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 375.8625)
 
 [node name="Exit" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -267.3891)
-
-[node name="TriggerArea" type="Area3D" parent="."]
-script = ExtResource("3_wtbdh")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="TriggerArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.775852, 85.18265, 54.281765)
-shape = SubResource("BoxShape3D_5bbb8")

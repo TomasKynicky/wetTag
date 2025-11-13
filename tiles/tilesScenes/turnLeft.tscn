@@ -13,6 +13,8 @@ script = ExtResource("1_5rc3x")
 [node name="TriggerArea" type="Area3D" parent="."]
 script = ExtResource("2_00g0a")
 
+[node name="TileTimer" type="Timer" parent="TriggerArea"]
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="TriggerArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.0934563, 9.9769745, -0.0037956238)
 shape = SubResource("BoxShape3D_5rc3x")

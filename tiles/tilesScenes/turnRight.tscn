@@ -14,6 +14,8 @@ script = ExtResource("1_ifcuv")
 [node name="TriggerArea" type="Area3D" parent="."]
 script = ExtResource("2_1h4vh")
 
+[node name="TileTimer" type="Timer" parent="TriggerArea"]
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="TriggerArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42.19037, 122.03995, -0.3865242)
 shape = SubResource("BoxShape3D_ifcuv")
